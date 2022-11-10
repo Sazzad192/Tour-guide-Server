@@ -24,10 +24,17 @@ async function run() {
 
         app.get('/services', async(req, res) =>{
             const query = {}
-            const services = servicesCollection.find(query);
+            const services = servicesCollection.find(query).limit(3);
             const result = await services.toArray();
             res.send(result)
         })
+        
+        app.get('/servicesAll', async(req, res) =>{
+          const query = {}
+          const services = servicesCollection.find(query);
+          const result = await services.toArray();
+          res.send(result)
+      })
 
         app.get('/services/:id', async(req, res)=>{
             const id = req.params.id;
@@ -44,6 +51,15 @@ async function run() {
         res.send(result)
       })
 
+      // ------------------------- Review get by ID query ------------------------- 
+
+      app.get('/review/:id', async(req, res) =>{
+        const id = req.params.id;
+        const query = {_id: ObjectId(id)};
+        const result = await reviewCollection.findOne(query);
+        res.send(result)
+      })
+
       app.get('/review', async(req, res) =>{
         let query= {}
         if(req.query.ServiceId){
@@ -51,7 +67,7 @@ async function run() {
             ServiceId : req.query.ServiceId
           }
         }
-        const services = reviewCollection.find(query);
+        const services = reviewCollection.find(query).sort({Time: -1});
         const result = await services.toArray();
         res.send(result)
       })
@@ -64,7 +80,7 @@ async function run() {
             UserEmail : req.query.UserEmail
           }
         }
-        const services = reviewCollection.find(query);
+        const services = reviewCollection.find(query).sort({Time: -1});
         const result = await services.toArray();
         res.send(result)
       })
@@ -78,7 +94,12 @@ async function run() {
         res.send(result)
       })
 
-
+      app.get('/update/:id', async(req, res)=>{
+        const id = req.params.id;
+        const query = {_id: ObjectId(id)};
+        const result = await reviewCollection.findOne(query);
+        res.send(result)
+      })
     } 
     finally {
     //   await client.close();
