@@ -100,6 +100,21 @@ async function run() {
         const result = await reviewCollection.findOne(query);
         res.send(result)
       })
+
+      //------------------------- update -----------------------
+      app.put('/review/:id', async(req, res) =>{
+        const id = req.params.id;
+        const filter = {_id: ObjectId(id)};
+        const Data = req.body;
+        const option ={upsert:true}
+        const updatedData = {
+          $set:{
+            reviewText:Data.review
+          }
+        }
+        const result = await reviewCollection.updateOne(filter, updatedData, option);
+        res.send(result)
+      })
     } 
     finally {
     //   await client.close();
